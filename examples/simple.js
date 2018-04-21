@@ -14,6 +14,7 @@ const rootLocation = './data.pdb';
 const hosts = {
   // nullHost,
   izDemon: new Host('http://172.27.29.155:3000'),
+  macDemon: new Host('http://172.27.6.55:3333'),
   hastebin: new Hastebin()
 };
 
