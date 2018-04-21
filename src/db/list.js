@@ -11,4 +11,4 @@ const concat = (xs, ys) => {
   const [x, xt] = xs;
 
   return List(x, concat(xt, ys));
-}
+};

@@ -1,5 +1,7 @@
-const set = (rootNode, key, value) => Promise.resolve({ key, value })
+const get = (key) => Promise.resolve(null);
 
-const get = (rootNode, key) => Promise.resolve({ key, value: null })
+const has = (key) => Promise.resolve(false);
 
-const del = (rootNode, key) => Promise.resolve({ key })
+const set = (key, value) => Promise.resolve(null);
+
+const unset = (key) => Promise.resolve(key);
