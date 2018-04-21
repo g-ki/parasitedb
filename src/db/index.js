@@ -1,20 +1,25 @@
 const fp = require('lodash/fp');
-const localHash = require('./local_hash');
-const hosts = require('../hosts');
+const localHash = require('./local-hash');
+
+const hosts = {};
+
+const addHost = host => hosts[host.name] = host;
 
 const getHost = fp.get(fp.__, hosts);
+
 const randHost = () => {
   const keys = fp.keys(hosts);
   const randKey = keys[fp.random(0, keys.length - 1)];
+
   return hosts[randKey];
 };
 
 
-const get = fp.curry(async (collection, key, db) =>
+const get = fp.curry(async (collection, key, db) => {
   const location = await collection.get(key, db);
   const host = getHost(location.host);
 
-  return host.get(location);
+  return host.get(location.path);
 });
 
 
@@ -47,6 +52,10 @@ const parasitedb = {
   has: has(localHash),
   set: set(localHash),
   unset: unset(localHash),
+
+  addHost: addHost,
+
+  open: localHash.open,
 };
 
 module.exports = parasitedb;
