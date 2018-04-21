@@ -5,12 +5,14 @@ const encryptor = require('../src/plugins/encryptor');
 
 const nullHost = require('../src/hosts/null');
 const Host = require('../src/hosts/host');
+const Hastebin = require('../src/hosts/hastebin');
 
 const SECRET_MESSAGE = 'qwerty12346';
 
 const hosts = {
   nullHost,
-  izDemon: new Host('http://172.27.29.155:3000')
+  izDemon: new Host('http://172.27.29.155:3000'),
+  hastebin: new Hastebin()
 };
 
 (async () => {
