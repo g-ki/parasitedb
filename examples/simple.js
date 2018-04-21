@@ -1,17 +1,19 @@
 const pdb = require('../src/db');
-const nullHost = require('../src/hosts/null')
+const nullHost = require('../src/hosts/null');
+const Host = require('../src/hosts/host');
 
-pdb.addHost(nullHost);
+const hosts = {
+  nullHost,
+  izDemon: new Host('http://172.27.29.155:3000')
+};
 
 (async () => {
-  const usersDb = await pdb.open('./users.pdb');
+  const db = await pdb('./users.pdb', hosts);
 
-  const user = { name: 'Stefan S.', age: 21 };
-  await pdb.set('stefan', user, usersDb);
-  console.log(usersDb); // Map { 'stefan' => { host: 'null', path: null } }
+  await db.set('text', 'habala babala');
+  const result = await db.get('text');
 
-  // const stef = await pdb.get('stefan', usersDb);
-  // console.log(stef); // null
+  console.log(result);
 })();
 
 

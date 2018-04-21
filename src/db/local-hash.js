@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const get = (key, store) => new Promise((res, rej) => {
   const val = store.get(key);
-  if (val !== undefined )
+  if (val !== undefined)
     res(val)
   else
     rej(val)
@@ -25,8 +25,8 @@ const write = (filePath, store) => {
   const json = JSON.stringify([...store]);
 
   return new Promise((resolve, reject) => {
-    fs.writeFile(filePath, json, function(err) {
-      if(err)
+    fs.writeFile(filePath, json, function (err) {
+      if (err)
         return reject(err);
 
       resolve(store);

@@ -1,63 +1,50 @@
-const hosts = {};
-
-const addHost = host => hosts[host.name] = host;
-const getHost = x => hosts[x];
-
-const randHost = () => {
-  const choose = xs => xs[Math.floor(Math.random() * xs.length)];
-
-  const names = Object.keys(hosts);
-  const hostName = choose(names);
-
-  return hosts[hostName];
-};
-
-
-const get = collection => async (key, db) => {
-  const location = await collection.get(key, db);
-  const host = getHost(location.host);
-
-  return host.get(location.path);
-};
-
-
-const has = collection => async (key, db) => {
-  const location = await collection.has(key, db);
-  const host = getHost(location.host);
-
-  return host.has(location);
-};
-
-
-const set = collection => async (key, value, db) => {
-  const host = randHost();
-  const location = await host.set(key, value);
-
-  return collection.set(key, location, db);
-};
-
-
-const unset = collection => async (key, db) => {
-  const location = await collection.get(key, db);
-  const host = getHost(location.host);
-
-  return host.unset(location);
-};
-
-
-const open = collection => collection.open
-
 const localHash = require('./local-hash');
 
-const parasitedb = {
-  get: get(localHash),
-  has: has(localHash),
-  set: set(localHash),
-  unset: unset(localHash),
+const randKey = object => {
+  const keys = Object.keys(object);
 
-  open: open(localHash),
-
-  addHost: addHost,
+  return keys[Math.floor(Math.random() * keys.length)];
 };
 
-module.exports = parasitedb;
+module.exports = async (path, hosts) => {
+  const store = await localHash.open(path);
+  const collection = localHash;
+  const randHost = () => randKey(hosts);
+  const getHost = name => hosts[name];
+
+  const get = async (key) => {
+    const location = await collection.get(key, store);
+    const host = getHost(location.host);
+
+    return host.get(location.path);
+  };
+
+  const has = async (key) => {
+    const location = await collection.has(key, store);
+    const host = getHost(location.host);
+
+    return host.has(location);
+  };
+
+  const set = async (key, value) => {
+    const hostName = randHost();
+    const path = await hosts[hostName].set(value);
+    const location = { path, host: hostName };
+
+    return collection.set(key, location, store);
+  };
+
+  const unset = async (key) => {
+    const location = await collection.get(key, store);
+    const host = getHost(location.host);
+
+    return host.unset(location);
+  };
+
+  return {
+    get,
+    has,
+    set,
+    unset,
+  };
+}
