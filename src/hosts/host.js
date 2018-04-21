@@ -9,7 +9,7 @@ module.exports = class Host {
     return axios.get(url).then(res => res.data);
   }
 
-  has(key) {
+  has(url) {
     return axios.get(url).then(() => true, () => false);
   }
 
