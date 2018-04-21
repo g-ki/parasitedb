@@ -1,18 +1,5 @@
 const fs = require('fs');
 
-const get = (key, store) => new Promise((res, rej) => {
-  const val = store.get(key);
-  if (val !== undefined)
-    res(val)
-  else
-    rej(val)
-});
-
-const has = (key, store) => Promise.resolve(store.has(key));
-
-const set = (key, value, store) => Promise.resolve(store.set(key, value))
-
-const unset = (key, store) => Promise.resolve(store.delete(key));
 
 const read = async (filePath) => {
   var json = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -39,11 +26,32 @@ const open = async (filePath) =>
   read(filePath).catch(() => write(filePath, new Map()));
 
 
-module.exports = {
-  get,
-  has,
-  set,
-  unset,
+const localHash = async (filePath) => {
+  const store = await open(filePath);
 
-  open,
-};
+  const get = (key) => new Promise((resolve, reject) => {
+    const val = store.get(key);
+    if (val !== undefined) {
+      resolve(val)
+    }
+    else {
+      reject(val)
+    }
+  });
+
+  const has = (key) => Promise.resolve(store.has(key));
+
+  const set = (key, value) => Promise.resolve(store.set(key, value))
+
+  const unset = (key) => Promise.resolve(store.delete(key));
+
+  return {
+    get,
+    has,
+    set,
+    unset,
+  }
+}
+
+
+module.exports = localHash;
