@@ -2,6 +2,7 @@ const axios = require('axios');
 const pdb = require('../src/db');
 
 const encryptor = require('../src/plugins/encryptor');
+const { fromFile } = require('../src/utils');
 
 const nullHost = require('../src/hosts/null');
 const Host = require('../src/hosts/host');
@@ -22,9 +23,10 @@ const hosts = {
   );
 
   await db.set('bob', { name: 'Bob', age: 21 });
-  await db.set('image', { name: 'Bob', age: 21 });
+  await db.set('file', await fromFile('./users.pdb'));
 
-  const result = await db.get('bob');
+  const user = await db.get('bob');
+  const file = await db.get('file');
 
-  console.log(result);
+  console.log(file);
 })();
