@@ -10,8 +10,8 @@ pdb.addHost(nullHost);
   await pdb.set('stefan', user, usersDb);
   console.log(usersDb); // Map { 'stefan' => { host: 'null', path: null } }
 
-  const stef = await pdb.get('stefan', usersDb);
-  console.log(stef); // null
+  // const stef = await pdb.get('stefan', usersDb);
+  // console.log(stef); // null
 })();
 
 

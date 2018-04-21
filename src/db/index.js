@@ -1,51 +1,53 @@
-const fp = require('lodash/fp');
-const localHash = require('./local-hash');
-
 const hosts = {};
 
 const addHost = host => hosts[host.name] = host;
-
-const getHost = fp.get(fp.__, hosts);
+const getHost = x => hosts[x];
 
 const randHost = () => {
-  const keys = fp.keys(hosts);
-  const randKey = keys[fp.random(0, keys.length - 1)];
+  const choose = xs => xs[Math.floor(Math.random() * xs.length)];
 
-  return hosts[randKey];
+  const names = Object.keys(hosts);
+  const hostName = choose(names);
+
+  return hosts[hostName];
 };
 
 
-const get = fp.curry(async (collection, key, db) => {
+const get = collection => async (key, db) => {
   const location = await collection.get(key, db);
   const host = getHost(location.host);
 
   return host.get(location.path);
-});
+};
 
 
-const has = fp.curry(async (collection, key, db) => {
+const has = collection => async (key, db) => {
   const location = await collection.has(key, db);
   const host = getHost(location.host);
 
   return host.has(location);
-});
+};
 
 
-const set = fp.curry(async (collection, key, value, db) => {
+const set = collection => async (key, value, db) => {
   const host = randHost();
   const location = await host.set(key, value);
 
   return collection.set(key, location, db);
-});
+};
 
 
-const unset = fp.curry(async (collection, key, db) => {
+const unset = collection => async (key, db) => {
   const location = await collection.get(key, db);
   const host = getHost(location.host);
 
   return host.unset(location);
-});
+};
 
+
+const open = collection => collection.open
+
+const localHash = require('./local-hash');
 
 const parasitedb = {
   get: get(localHash),
@@ -53,9 +55,9 @@ const parasitedb = {
   set: set(localHash),
   unset: unset(localHash),
 
-  addHost: addHost,
+  open: open(localHash),
 
-  open: localHash.open,
+  addHost: addHost,
 };
 
 module.exports = parasitedb;
