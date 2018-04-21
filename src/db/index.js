@@ -6,7 +6,6 @@ const randKey = object => {
   return keys[Math.floor(Math.random() * keys.length)];
 };
 
-
 const parasitedb = store => async (hosts) => {
   const randHost = () => randKey(hosts);
   const getHost = name => hosts[name];
@@ -46,8 +45,7 @@ const parasitedb = store => async (hosts) => {
     set,
     unset,
   };
-}
-
+};
 
 module.exports = async (path, hosts) =>
   parasitedb(await localHash(path))(hosts);

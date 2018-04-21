@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/g-ki/parasitedb#readme",
   "dependencies": {
+    "aes256": "^1.0.3",
     "axios": "^0.18.0",
     "lodash": "^4.17.5"
   }
