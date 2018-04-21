@@ -41,7 +41,10 @@ const localHash = async (filePath) => {
 
   const has = (key) => Promise.resolve(store.has(key));
 
-  const set = (key, value) => Promise.resolve(store.set(key, value))
+  const set = (key, value) => {
+    store.set(key, value);
+    return write(filePath, store);
+  }
 
   const unset = (key) => Promise.resolve(store.delete(key));
 

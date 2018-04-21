@@ -49,5 +49,5 @@ const parasitedb = store => async (hosts) => {
 }
 
 
-module.exports = (path, hosts) =>
+module.exports = async (path, hosts) =>
   parasitedb(await localHash(path))(hosts);

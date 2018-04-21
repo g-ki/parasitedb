@@ -1,3 +1,4 @@
+const axios = require('axios');
 const pdb = require('../src/db');
 const nullHost = require('../src/hosts/null');
 const Host = require('../src/hosts/host');
@@ -10,9 +11,9 @@ const hosts = {
 (async () => {
   const db = await pdb('./users.pdb', hosts);
 
-  await db.set('text', 'habala babala');
-  const result = await db.get('text');
+  await db.set('bob', { name: 'Bob', age: 21 });
 
+  const result = await db.get('bob');
   console.log(result);
 })();
 
