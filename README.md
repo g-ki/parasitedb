@@ -1,1 +1,2 @@
 # parasitedb
+Hostless Distributed Database.
